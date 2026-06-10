@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+.complaint-bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #020617, #0f172a, #020617);
+    padding: 60px 15px;
+    overflow-y: auto;
+}
+.complaint-wrapper { max-width: 650px; margin: auto; }
+.complaint-card {
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 18px;
+    padding: 35px;
+    color: #fff;
+}
+.form-control, select {
+    background: #020617 !important;
+    color: #fff !important;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 12px;
+}
+.btn-complaint {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    border-radius: 30px;
+    padding: 14px;
+    font-weight: 700;
+    width: 100%;
+    color: #fff;
+}
+.result-box {
+    background: #020617;
+    border-left: 4px solid #38bdf8;
+    padding: 15px;
+    margin-top: 20px;
+}
+</style>
+
+<div class="complaint-bg">
+<div class="complaint-wrapper">
+<div class="complaint-card">
+
+<h4 class="text-center mb-3">Asset Support Center</h4>
+
+{% if message %}
+<div class="alert alert-success text-center">{{ message }}</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-danger text-center">{{ error }}</div>
+{% endif %}
+
+<form method="POST">
+<label>Select Employee</label>
+<select id="employee" name="employee" class="form-control" required onchange="setAsset()">
+<option value="">-- Select --</option>
+{% for emp, asset in employees_assets.items() %}
+<option value="{{ emp }}" data-asset="{{ asset }}">{{ emp }}</option>
+{% endfor %}
+</select>
+
+<label class="mt-3">Asset ID</label>
+<input id="asset_id" name="asset_id" class="form-control" readonly>
+
+<label class="mt-3">Email</label>
+<input type="email" name="email" class="form-control" required placeholder="Enter email">
+
+<label class="mt-3">Issue</label>
+<textarea name="issue" class="form-control" rows="3" required></textarea>
+
+<button class="btn-complaint mt-4">Submit Complaint</button>
+</form>
+
+<hr>
+
+<h5>Track Status</h5>
+<form method="GET">
+<input name="search_asset_id" class="form-control" placeholder="Enter Asset ID" required>
+<button class="btn btn-info mt-2 w-100">View Status</button>
+</form>
+
+{% for res in search_results %}
+<div class="result-box">
+<strong>Asset:</strong> {{ res.asset_id }} <br>
+<strong>Status:</strong>
+<span style="color:
+{% if res.status=='Pending' %}#fbbf24
+{% elif res.status=='Solved' %}#4ade80
+{% else %}#ef4444{% endif %};">
+{{ res.status }}
+</span>
+</div>
+{% endfor %}
+
+</div>
+</div>
+</div>
+
+<script>
+function setAsset() {
+    const sel = document.getElementById("employee");
+    document.getElementById("asset_id").value =
+        sel.options[sel.selectedIndex].dataset.asset || "";
+}
+</script>
+
+{% endblock %}

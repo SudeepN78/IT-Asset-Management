@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+/* ===== FORCE FULL SCREEN (IMPORTANT FIX) ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* ===== FULLSCREEN BACKGROUND FIX ===== */
+.return-screen {
+    position: fixed;      /* 🔥 KEY FIX */
+    inset: 0;             /* 🔥 FULL SCREEN */
+    width: 100vw;
+    height: 100vh;
+    background:
+        radial-gradient(circle at 25% 20%, rgba(56,189,248,0.18), transparent 45%),
+        radial-gradient(circle at 75% 80%, rgba(34,197,94,0.18), transparent 45%),
+        linear-gradient(135deg, #020617, #020617);
+    display: flex;
+    align-items: center;   /* 🔥 PERFECT CENTER */
+    justify-content: center;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* ===== CARD ===== */
+.return-card {
+    width: 100%;
+    max-width: 460px;
+    background: rgba(15, 23, 42, 0.96);
+    border-radius: 20px;
+    padding: 38px;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 50px 100px rgba(0,0,0,0.85);
+}
+
+/* ===== TITLE ===== */
+.return-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 28px;
+}
+
+/* ===== LABELS ===== */
+.return-card label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 14px;
+    display: block;
+    color: #e5e7eb;
+}
+
+/* ===== INPUTS ===== */
+.return-card input,
+.return-card textarea {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #1e293b;
+    color: white;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 6px;
+}
+
+.return-card input:focus,
+.return-card textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+}
+
+/* ===== BUTTON ===== */
+.return-btn {
+    margin-top: 28px;
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    color: white;
+    transition: all 0.25s ease;
+}
+
+.return-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px rgba(34,197,94,0.45);
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    border-radius: 12px;
+    font-size: 14px;
+}
+</style>
+
+<div class="return-screen">
+  <div class="return-card">
+
+    <div class="return-title">🔄 Return Asset</div>
+
+    {% if error %}
+      <div class="alert alert-danger text-center">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+      <div class="alert alert-success text-center">{{ success }}</div>
+    {% endif %}
+
+    <form method="POST" action="/return-asset">
+
+      <label>Asset ID</label>
+      <input type="text"
+             name="asset_id"
+             id="asset_id"
+             placeholder="Enter Asset ID"
+             required
+             onkeyup="fetchOwner()">
+
+      <label>Employee</label>
+      <input type="text"
+             id="employee_name"
+             placeholder="Auto fetched"
+             readonly>
+
+      <label>Return Reason</label>
+      <textarea name="issue"
+                rows="3"
+                placeholder="Reason for returning asset"
+                required></textarea>
+
+      <button class="return-btn">
+        🔄 Send Return Request
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+function fetchOwner(){
+  const assetId = document.getElementById("asset_id").value;
+  if(!assetId) return;
+
+  fetch("/get-asset-owner",{
+    method:"POST",
+    headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+    body:"asset_id="+encodeURIComponent(assetId)
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById("employee_name").value = d.employee || "—";
+  });
+}
+</script>
+
+{% endblock %}

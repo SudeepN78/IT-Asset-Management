@@ -1,0 +1,308 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+body{
+    background:
+        radial-gradient(circle at 20% 20%, rgba(56,189,248,0.25), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(250,204,21,0.25), transparent 40%),
+        linear-gradient(135deg, #020617, #020b1f, #020617);
+}
+.page-wrapper{ padding:35px; min-height:100vh; }
+.page-title{
+    font-size:38px;font-weight:900;text-align:center;margin-bottom:50px;
+    background:linear-gradient(135deg,#38bdf8,#facc15);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:28px;margin-bottom:60px;
+}
+.feature-card{
+    background:rgba(15,23,42,0.95);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:26px;padding:30px;
+    text-align:center;color:#fff;
+    cursor:pointer;transition:.35s;
+}
+.feature-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 40px 100px rgba(0,0,0,.9);
+}
+.feature-icon{font-size:46px;margin-bottom:12px;}
+.feature-title{font-size:19px;font-weight:800;}
+.feature-desc{font-size:13px;color:#94a3b8;}
+
+.section-box{display:none;}
+.section-title{
+    font-size:22px;font-weight:800;color:#f8fafc;
+    margin:40px 0 20px;
+}
+
+.full-table{width:100vw;margin-left:calc(-50vw + 50%);}
+.hr-table{width:100%;border-collapse:collapse;background:#020617;}
+.hr-table th,.hr-table td{
+    padding:14px;text-align:center;color:#fff;
+    border-bottom:1px solid #1e293b;
+}
+.hr-table th{border-bottom:2px solid #1e293b;}
+.hr-table td{background:#0f172a;}
+.hr-table tr:hover td{background:#1e293b;}
+
+.btn{border-radius:40px;font-weight:800;}
+.btn-success{background:#16a34a;}
+.btn-danger{background:#dc2626;}
+.btn-primary{background:#2563eb;}
+.form-select{
+    background:#020617;color:#fff;border:1px solid #334155;
+}
+</style>
+
+<div class="page-wrapper">
+<div class="page-title">HR Dashboard</div>
+
+<!-- FEATURES -->
+<div class="feature-grid">
+    <div class="feature-card" onclick="showSection('requests')">
+        <div class="feature-icon">📥</div>
+        <div class="feature-title">Asset Requests</div>
+        <div class="feature-desc">Approve · Reject · Collect</div>
+    </div>
+    <div class="feature-card" onclick="showSection('complaints')">
+        <div class="feature-icon">🛠️</div>
+        <div class="feature-title">Complaints</div>
+        <div class="feature-desc">Repair · Replace · Resolve</div>
+    </div>
+    <div class="feature-card" onclick="showSection('returns')">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-title">Return Requests</div>
+        <div class="feature-desc">Employee → HR</div>
+    </div>
+    <div class="feature-card" onclick="showSection('dataset')">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Asset Dataset</div>
+        <div class="feature-desc">All assets overview</div>
+    </div>
+    <div class="feature-card" onclick="location.href='/asset-history'">
+        <div class="feature-icon">📜</div>
+        <div class="feature-title">Asset History</div>
+        <div class="feature-desc">Lifecycle tracking</div>
+    </div>
+    <div class="feature-card" onclick="location.href='/predict-asset'">
+        <div class="feature-icon">🔮</div>
+        <div class="feature-title">Predict Health</div>
+    </div>
+</div>
+
+<!-- ================= ASSET REQUESTS ================= -->
+<!-- ================= ASSET REQUESTS ================= -->
+<div id="requests" class="section-box">
+<div class="section-title">Employee Asset Requests</div>
+
+<div class="full-table">
+<table class="hr-table">
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Employee</th>
+    <th>Location</th>
+    <th>Asset</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+{% for r in requests %}
+<tr>
+<td>{{ r.id }}</td>
+<td>{{ r.employee }}</td>
+<td>{{ r.requested_location }}</td>
+<td>{{ r.asset_name }}</td>
+<td>{{ r.status }}</td>
+
+<td>
+{% if r.status == 'Pending' %}
+
+<form action="/hr/approve/{{ r.id }}" method="POST" class="mb-1">
+    <input type="text"
+           name="location_msg"
+           class="form-control mb-1"
+           placeholder="Available Location"
+           required>
+    <textarea name="custom_msg"
+              class="form-control mb-1"
+              placeholder="Optional message"></textarea>
+
+    <button class="btn btn-success btn-sm w-100">Approve</button>
+</form>
+
+<form action="/hr/reject/{{ r.id }}" method="POST">
+    <button class="btn btn-danger btn-sm w-100">Reject</button>
+</form>
+
+{% elif r.status == 'Approved' and r.collected == 0 %}
+
+<form action="/hr/collect/{{ r.id }}" method="POST">
+
+<select name="asset_id" class="form-select mb-2" required>
+    <option value="">-- Select Asset ID | Location --</option>
+
+    {% for a in assets %}
+        {% if a.asset_name == r.asset_name and a.status == 'Available' %}
+        <option value="{{ a.asset_id }}">
+            {{ a.asset_id }} | {{ a.location }}
+        </option>
+        {% endif %}
+    {% endfor %}
+</select>
+
+<button class="btn btn-primary btn-sm w-100">
+    Collect
+</button>
+
+</form>
+
+{% else %}
+<span class="badge bg-success w-100 py-2">✔ Completed</span>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ================= COMPLAINTS ================= -->
+<div id="complaints" class="section-box">
+<div class="section-title">Complaints</div>
+<div class="full-table">
+<table class="hr-table">
+<thead>
+<tr><th>ID</th><th>Employee</th><th>Asset</th><th>Issue</th><th>Status</th><th>Action</th></tr>
+</thead>
+<tbody>
+{% for c in complaints %}
+<tr>
+<td>{{ c[0] }}</td>
+<td>{{ c[1] }}</td>
+<td>{{ c[2] }}</td>
+<td>{{ c[3] }}</td>
+<td>{{ c[4] }}</td>
+<td>
+<form method="POST" action="/update-complaint-status">
+<input type="hidden" name="id" value="{{ c[0] }}">
+<select name="status" class="form-select mb-1">
+<option>Pending</option>
+<option>Solved</option>
+<option>Rejected</option>
+</select>
+<select name="action" class="form-select mb-1">
+<option value="">-- Action --</option>
+<option>Repair</option>
+<option>Replace</option>
+</select>
+<button class="btn btn-primary btn-sm w-100">Update</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ================= RETURN REQUESTS ================= -->
+<div id="returns" class="section-box">
+<div class="section-title">Return Requests</div>
+<div class="full-table">
+<table class="hr-table">
+<thead>
+<tr><th>ID</th><th>Asset</th><th>Employee</th><th>Issue</th><th>Status</th><th>Action</th></tr>
+</thead>
+<tbody>
+{% for r in return_requests %}
+<tr>
+<td>{{ r.id }}</td>
+<td>{{ r.asset_id }}</td>
+<td>{{ r.employee }}</td>
+<td>{{ r.issue }}</td>
+<td>{{ r.status }}</td>
+<td>
+{% if r.status == 'Pending' %}
+<form action="/hr/collect-return/{{ r.id }}" method="POST">
+<button class="btn btn-success btn-sm w-100">Collect</button>
+</form>
+<form action="/hr/reject-return/{{ r.id }}" method="POST">
+<button class="btn btn-danger btn-sm w-100">Reject</button>
+</form>
+{% else %}
+✔ {{ r.status }}
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ================= DATASET ================= -->
+<!-- ================= DATASET ================= -->
+<div id="dataset" class="section-box">
+<div class="section-title">Asset Dataset</div>
+<div class="full-table">
+<table class="hr-table">
+<thead>
+<tr>
+    <th>Asset ID</th>
+    <th>Name</th>
+    <th>Model</th>
+    <th>Assigned To</th>
+    <th>Department</th>
+    <th>Location</th>
+    <th>Status</th>
+</tr>
+</thead>
+<tbody>
+{% for a in assets %}
+<tr>
+    <td>{{ a.asset_id }}</td>
+    <td>{{ a.asset_name }}</td>
+    <td>{{ a.model }}</td>
+    <td>
+        {% if a.assigned_to and a.assigned_to != 'Unassigned' %}
+            {{ a.assigned_to }}
+        {% else %}
+            <span style="color:#22c55e;font-weight:700;">Available</span>
+        {% endif %}
+    </td>
+    <td>{{ a.department }}</td>
+    <td>{{ a.location }}</td>
+    <td>
+        {% if a.status == 'Available' %}
+            <span style="color:#22c55e;font-weight:700;">Available</span>
+        {% elif a.status == 'In Use' %}
+            <span style="color:#38bdf8;font-weight:700;">In Use</span>
+        {% else %}
+            <span style="color:#facc15;font-weight:700;">{{ a.status }}</span>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+
+<script>
+function showSection(id){
+    document.querySelectorAll('.section-box').forEach(s=>s.style.display="none");
+    document.getElementById(id).style.display="block";
+}
+</script>
+
+{% endblock %}

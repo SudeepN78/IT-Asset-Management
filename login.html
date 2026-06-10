@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+/* ========== FULL SCREEN BACKGROUND ========== */
+.lux-screen {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,240,255,0.35), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(255,215,0,0.35), transparent 45%),
+        linear-gradient(135deg, #02060c, #071c2d, #020b14);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;   /* 🔧 FIX */
+    padding-top: 80px;         /* 🔧 FIX */
+    padding-bottom: 40px;
+    overflow-y: auto;
+}
+
+/* ========== CARD ========== */
+.lux-card {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.06)
+    );
+    backdrop-filter: blur(30px);
+    border-radius: 28px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 50px 150px rgba(0,0,0,0.9);
+    padding: 45px 40px;
+    color: #ffffff;
+}
+
+/* ========== PROJECT TITLE ========== */
+.project-title {
+    font-size: 42px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #00f0ff, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;          /* 🔧 FIX */
+}
+
+.project-sub {
+    text-align: center;
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 30px;
+}
+
+/* ========== INPUTS ========== */
+.lux-input {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.lux-input:focus {
+    border-color: #00f0ff;
+    box-shadow: 0 0 0 3px rgba(0,240,255,0.25);
+}
+
+/* ========== BUTTONS ========== */
+.lux-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #00f0ff, #ffd700);
+    color: #000;
+    margin-top: 10px;
+}
+
+.lux-danger {
+    background: linear-gradient(135deg, #ff0033, #ff7a00);
+    color: #fff;
+}
+
+.lux-success {
+    background: linear-gradient(135deg, #22c55e, #4ade80);
+    color: #000;
+}
+
+.lux-signup {
+    background: linear-gradient(135deg, #6366f1, #22d3ee);
+    color: #000;
+}
+
+/* ========== DIVIDER ========== */
+.divider {
+    text-align: center;
+    margin: 22px 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+</style>
+
+<div class="lux-screen">
+
+    <div class="lux-card">
+
+        <!-- PROJECT NAME -->
+        <div class="project-title">IT Asset Management</div>
+        <div class="project-sub">Utilization & Optimization</div>
+
+        {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+        {% endif %}
+
+        <!-- LOGIN FORM -->
+        <form method="POST">
+            <input name="username" class="form-control lux-input" placeholder="Username" required>
+            <input name="password" type="password" class="form-control lux-input" placeholder="Password" required>
+
+            <select name="role" class="form-select lux-input" required>
+                <option value="EMPLOYEE">Employee</option>
+                <option value="HR">Admin / HR</option>
+            </select>
+
+            <button class="lux-btn">🚀 Login</button>
+        </form>
+
+        <div class="divider">──────── ACTIONS ────────</div>
+
+        <a href="/raise-complaint" class="btn lux-btn lux-danger w-100">
+            🚨 Raise Complaint
+        </a>
+
+        <a href="/return-asset" class="btn lux-btn lux-success w-100 mt-2">
+            🔄 Return Asset
+        </a>
+
+        <div class="divider">──────── NEW USER ────────</div>
+
+        <a href="/signup" class="btn lux-btn lux-signup w-100">
+            ✨ Create New Account
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

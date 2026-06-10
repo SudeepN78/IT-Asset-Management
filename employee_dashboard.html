@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    }
+
+    .lux-dashboard {
+        min-height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lux-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        width: 100%;
+        max-width: 520px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        color: #fff;
+        text-align: center;
+    }
+
+    .lux-title {
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .lux-welcome {
+        font-size: 15px;
+        color: #ddd;
+        margin-bottom: 25px;
+    }
+
+    .lux-btn {
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        color: #000;
+        font-weight: 600;
+        padding: 12px 28px;
+        border-radius: 30px;
+        border: none;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 8px 20px rgba(255, 210, 0, 0.5);
+    }
+
+    .lux-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(255, 210, 0, 0.8);
+        color: #000;
+    }
+
+    .lux-divider {
+        height: 1px;
+        background: rgba(255,255,255,0.2);
+        margin: 25px 0;
+    }
+</style>
+
+<div class="lux-dashboard">
+    <div class="lux-card">
+
+        <h3 class="lux-title">Employee Dashboard</h3>
+        <p class="lux-welcome">
+            Welcome back, <strong>{{ session['username'] }}</strong>
+        </p>
+
+        <div class="lux-divider"></div>
+
+        <h5 class="mb-3">Quick Actions</h5>
+
+        <a href="/request-asset" class="btn lux-btn">
+            🧾 Request Asset
+        </a>
+
+    </div>
+</div>
+
+{% endblock %}

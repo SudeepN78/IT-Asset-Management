@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+    /* ===== PAGE BACKGROUND ===== */
+    body {
+        background: linear-gradient(135deg, #141e30, #243b55);
+    }
+
+    /* ===== CENTER WRAPPER ===== */
+    .lux-form-wrapper {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ===== GLASS CARD ===== */
+    .lux-form-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(16px);
+        border-radius: 22px;
+        padding: 35px 40px;
+        width: 100%;
+        max-width: 520px;
+        color: #fff;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .lux-title {
+        text-align: center;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+
+    .lux-subtitle {
+        text-align: center;
+        font-size: 14px;
+        color: #dcdcdc;
+        margin-bottom: 30px;
+    }
+
+    /* ===== LABELS ===== */
+    .lux-form-card label {
+        font-size: 14px;
+        margin-top: 12px;
+        color: #f1f1f1;
+    }
+
+    /* ===== INPUTS ===== */
+    .lux-input,
+    .lux-select {
+        background: rgba(255, 255, 255, 0.18);
+        border: none;
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .lux-input::placeholder {
+        color: #ddd;
+    }
+
+    .lux-input:focus,
+    .lux-select:focus {
+        background: rgba(255, 255, 255, 0.28);
+        box-shadow: none;
+        outline: none;
+        color: #fff;
+    }
+
+    /* ===== IMPORTANT FIX FOR SELECT OPTIONS ===== */
+    select option {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    /* ===== BUTTON ===== */
+    .lux-btn {
+        margin-top: 25px;
+        width: 100%;
+        padding: 12px;
+        border-radius: 30px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        color: #000;
+        border: none;
+        box-shadow: 0 10px 25px rgba(255, 210, 0, 0.6);
+        transition: all 0.3s ease;
+    }
+
+    .lux-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(255, 210, 0, 0.85);
+        color: #000;
+    }
+
+    /* ===== ALERTS ===== */
+    .lux-alert {
+        border-radius: 15px;
+        margin-top: 20px;
+        font-weight: 500;
+    }
+</style>
+
+<div class="lux-form-wrapper">
+    <div class="lux-form-card">
+
+        <h3 class="lux-title">Request an Asset</h3>
+        <p class="lux-subtitle">Submit your asset requirement securely</p>
+
+        <form method="POST">
+
+            <!-- ASSET TYPE -->
+            <label>Asset Type</label>
+            <select name="asset_name" class="form-control lux-select" required>
+                <option value="">-- Select Asset --</option>
+                {% for a in assets %}
+                    <option value="{{ a }}">{{ a }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- LOCATION -->
+            <label>Required Location</label>
+            <input name="location" class="form-control lux-input"
+                   placeholder="Office / City" required>
+
+            <!-- EMAIL -->
+            <label>Email</label>
+            <input name="email" type="email"
+                   class="form-control lux-input"
+                   placeholder="example@company.com" required>
+
+            <!-- PHONE -->
+            <label>Phone Number</label>
+            <input name="phone"
+                   class="form-control lux-input"
+                   placeholder="+91 XXXXX XXXXX" required>
+
+            <!-- SUBMIT -->
+            <button class="lux-btn">
+                🚀 Submit Asset Request
+            </button>
+        </form>
+
+        {% if message %}
+        <div class="alert alert-success text-center lux-alert">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-danger text-center lux-alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

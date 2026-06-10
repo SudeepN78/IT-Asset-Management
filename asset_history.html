@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+/* ================= BACKGROUND ================= */
+body {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(56,189,248,0.18), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(250,204,21,0.18), transparent 40%),
+        linear-gradient(135deg, #020617, #020b1f, #020617);
+}
+
+/* ================= PAGE WRAPPER ================= */
+.history-wrapper {
+    min-height: 100vh;
+    padding: 60px 20px;
+}
+
+/* ================= CARD ================= */
+.history-card {
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 18px;
+    padding: 35px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.8);
+}
+
+/* ================= TITLE ================= */
+.page-title {
+    font-size: 30px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #38bdf8, #facc15);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ================= TABLE ================= */
+.table {
+    margin-top: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: #020617;
+    color: #f8fafc;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #1e293b;
+    padding: 14px;
+}
+
+.table tbody td {
+    background: rgba(2,6,23,0.9);
+    color: #e5e7eb;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #1e293b;
+}
+
+.table-striped tbody tr:nth-of-type(odd) td {
+    background: rgba(15,23,42,0.85);
+}
+
+.table tbody tr:hover td {
+    background: rgba(56,189,248,0.12);
+    transition: 0.3s;
+}
+
+/* ================= ALERT ================= */
+.alert-warning {
+    background: rgba(250,204,21,0.15);
+    border: 1px solid rgba(250,204,21,0.4);
+    color: #fde68a;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ================= BACK BUTTON ================= */
+.back-btn {
+    margin-top: 25px;
+    display: inline-block;
+    background: linear-gradient(135deg, #475569, #1e293b);
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #020617;
+    transform: translateY(-2px);
+}
+</style>
+
+<div class="history-wrapper">
+    <div class="container">
+        <div class="history-card">
+
+            <h3 class="page-title">📜 Collected  Asset History</h3>
+
+            {% if history %}
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Asset ID</th>
+                            <th>Employee</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for h in history %}
+                        <tr>
+                            <td>{{ h.timestamp }}</td>
+                            <td>{{ h.asset_id }}</td>
+                            <td>{{ h.employee }}</td>
+                            <td>{{ h.action }}</td>
+                            <td>{{ h.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-warning">
+                No asset history found.
+            </div>
+            {% endif %}
+
+            <a href="/hr" class="back-btn">⬅ Back to HR Dashboard</a>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
